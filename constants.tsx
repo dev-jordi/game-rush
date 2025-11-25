@@ -11,9 +11,9 @@ export const TASKS: Task[] = [
   // Surrounding Tasks
   { id: 1, name: "Mais um Café", duration: 2500, icon: <CoffeeIcon className={ICON_CLASS} />, position: { top: '25%', left: '50%' }, xpGain: 10, energyCost: 10 },
   { id: 2, name: "Responder E-mails Urgentes", duration: 3500, icon: <EmailIcon className={ICON_CLASS} />, position: { top: '45%', left: '80%' }, xpGain: 15, energyCost: 15 },
-  { id: 3, name: "Otimizar o Código", duration: 5000, icon: <CodeIcon className={ICON_CLASS} />, position: { top: '75%', left: '70%' }, xpGain: 30, energyCost: 30 },
+  { id: 3, name: "Entregar tarefas", duration: 5000, icon: <CodeIcon className={ICON_CLASS} />, position: { top: '75%', left: '70%' }, xpGain: 30, energyCost: 30 },
   { id: 4, name: "Distração Rápida", duration: 3000, icon: <PlantIcon className={ICON_CLASS} />, position: { top: '75%', left: '30%' }, xpGain: 12, energyCost: 10 },
-  { id: 5, name: "Estudar para a Reunião", duration: 4000, icon: <BookIcon className={ICON_CLASS} />, position: { top: '45%', left: '20%' }, xpGain: 20, energyCost: 20 },
+  { id: 5, name: "Estudar para a Prova", duration: 4000, icon: <BookIcon className={ICON_CLASS} />, position: { top: '45%', left: '20%' }, xpGain: 20, energyCost: 20 },
 ];
 
 
