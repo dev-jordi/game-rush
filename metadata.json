@@ -1,0 +1,5 @@
+{
+  "name": "Simulador de Rotina",
+  "description": "Um jogo simples e sem fim, onde um personagem realiza tarefas diárias. Pause o jogo a qualquer momento para 'vencer' fazendo uma pausa.",
+  "requestFramePermissions": []
+}
