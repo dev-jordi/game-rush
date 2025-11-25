@@ -84,8 +84,8 @@ const App: React.FC = () => {
     if (gameState !== 'IDLE' || appState !== 'PLAYING') return;
 
     const energyCost = task.energyCost;
-    if (energy < energyCost && task.id !== 6) { // id 6 is nap
-      // Maybe show a "not enough energy" message
+    if (energy < energyCost) {
+      // Not enough energy
       return;
     }
     
@@ -207,7 +207,7 @@ const App: React.FC = () => {
                 task={task}
                 onClick={handleTaskClick}
                 isWorking={currentTaskId === task.id}
-                isDisabled={gameState !== 'IDLE' || (energy < task.energyCost && task.id !== 6)}
+                isDisabled={gameState !== 'IDLE' || energy < task.energyCost}
               />
             ))}
 
