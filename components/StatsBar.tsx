@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface StatsBarProps {
@@ -13,42 +14,38 @@ const StatsBar: React.FC<StatsBarProps> = ({ level, xp, xpToNextLevel, energy, m
     const energyPercentage = (energy / maxEnergy) * 100;
 
     return (
-        <div className="absolute top-16 left-1/2 -translate-x-1/2 w-11/12 max-w-md z-10 p-2 bg-white/60 dark:bg-slate-800/60 rounded-2xl shadow-lg backdrop-blur-sm">
-            <div className="flex flex-col gap-2">
-                {/* Level Display */}
-                <div className="text-center">
-                    <span className="font-bold text-xl text-teal-600 dark:text-teal-400">Nível {level}</span>
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 w-11/12 max-w-lg z-10">
+            <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-4 shadow-2xl flex flex-col gap-3">
+                
+                {/* Level Badge */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-1 rounded-full shadow-lg border border-white/20">
+                    <span className="font-bold text-sm text-white tracking-wider">NÍVEL {level}</span>
                 </div>
 
-                {/* XP Bar */}
-                <div className="flex items-center gap-2">
-                    <span className="font-semibold text-sm text-yellow-600 dark:text-yellow-400">XP</span>
-                    <div className="w-full bg-slate-200/80 dark:bg-slate-700/80 rounded-full h-4 relative overflow-hidden">
-                        <div 
-                            className="bg-gradient-to-r from-yellow-400 to-amber-500 h-full rounded-full transition-all duration-500 ease-out"
-                            style={{ width: `${xpPercentage}%` }}
-                        ></div>
-                         <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white text-shadow-sm">{Math.floor(xp)} / {xpToNextLevel}</span>
+                <div className="mt-2 flex flex-col gap-3">
+                    {/* XP Bar */}
+                    <div className="flex items-center gap-3">
+                        <span className="font-bold text-xs text-yellow-400 w-6">XP</span>
+                        <div className="flex-1 bg-black/50 rounded-full h-3 relative overflow-hidden border border-white/5">
+                            <div 
+                                className="bg-gradient-to-r from-yellow-500 to-amber-600 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(245,158,11,0.3)]"
+                                style={{ width: `${xpPercentage}%` }}
+                            ></div>
+                        </div>
                     </div>
-                </div>
 
-                {/* Energy Bar */}
-                <div className="flex items-center gap-2">
-                     <span className="font-semibold text-sm text-lime-600 dark:text-lime-400">⚡</span>
-                     <div className="w-full bg-slate-200/80 dark:bg-slate-700/80 rounded-full h-4 relative overflow-hidden">
-                        <div 
-                            className="bg-gradient-to-r from-lime-400 to-green-500 h-full rounded-full transition-all duration-500 ease-out"
-                            style={{ width: `${energyPercentage}%` }}
-                        ></div>
-                        <span className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white text-shadow-sm">{Math.floor(energy)} / {maxEnergy}</span>
+                    {/* Energy Bar */}
+                    <div className="flex items-center gap-3">
+                        <span className="font-bold text-xs text-emerald-400 w-6">ENE</span>
+                         <div className="flex-1 bg-black/50 rounded-full h-3 relative overflow-hidden border border-white/5">
+                            <div 
+                                className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                                style={{ width: `${energyPercentage}%` }}
+                            ></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <style>{`
-                .text-shadow-sm {
-                    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-                }
-            `}</style>
         </div>
     );
 };

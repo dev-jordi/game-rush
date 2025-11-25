@@ -176,15 +176,15 @@ const App: React.FC = () => {
   };
 
   return (
-    <main className="w-screen h-screen bg-black overflow-hidden relative font-sans select-none">
+    <main className="w-screen h-screen overflow-hidden relative font-sans select-none">
       <VolumeControl onVolumeChange={handleVolumeChange} initialVolume={volume} />
        {appState === 'PLAYING' && (
         <button 
           onClick={handlePause} 
-          className="absolute top-4 left-4 z-20 p-2 bg-white/60 dark:bg-slate-800/60 rounded-full shadow-lg backdrop-blur-sm hover:scale-110 transition-transform"
+          className="absolute top-4 left-4 z-20 p-2 bg-white/10 dark:bg-black/30 border border-white/20 rounded-full shadow-lg backdrop-blur-md hover:scale-110 hover:bg-white/20 transition-all"
           aria-label="Pausar o jogo"
         >
-          <PauseIcon className="w-6 h-6 text-slate-700 dark:text-slate-300" />
+          <PauseIcon className="w-6 h-6 text-slate-200" />
         </button>
       )}
       
