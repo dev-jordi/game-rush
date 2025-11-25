@@ -36,6 +36,14 @@ const PauseIcon: React.FC<{ className?: string }> = ({ className }) => (
     </svg>
 );
 
+const RestartIcon: React.FC<{ className?: string }> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="23 4 23 10 17 10"></polyline>
+        <polyline points="1 20 1 14 7 14"></polyline>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+    </svg>
+);
+
 const App: React.FC = () => {
   const [level, setLevel] = useState(INITIAL_STATE.level);
   const [xp, setXp] = useState(INITIAL_STATE.xp);
@@ -179,13 +187,24 @@ const App: React.FC = () => {
     <main className="w-screen h-screen overflow-hidden relative font-sans select-none">
       <VolumeControl onVolumeChange={handleVolumeChange} initialVolume={volume} />
        {appState === 'PLAYING' && (
-        <button 
-          onClick={handlePause} 
-          className="absolute top-4 left-4 z-20 p-2 bg-white/10 dark:bg-black/30 border border-white/20 rounded-full shadow-lg backdrop-blur-md hover:scale-110 hover:bg-white/20 transition-all"
-          aria-label="Pausar o jogo"
-        >
-          <PauseIcon className="w-6 h-6 text-slate-200" />
-        </button>
+        <div className="absolute top-4 left-4 z-20 flex gap-3">
+            <button 
+              onClick={handlePause} 
+              className="p-2 bg-white/10 dark:bg-black/30 border border-white/20 rounded-full shadow-lg backdrop-blur-md hover:scale-110 hover:bg-white/20 transition-all"
+              aria-label="Pausar o jogo"
+              title="Pausar (Vencer)"
+            >
+              <PauseIcon className="w-6 h-6 text-slate-200" />
+            </button>
+            <button 
+              onClick={handleRestart} 
+              className="p-2 bg-white/10 dark:bg-black/30 border border-white/20 rounded-full shadow-lg backdrop-blur-md hover:scale-110 hover:bg-white/20 transition-all"
+              aria-label="Reiniciar o jogo"
+              title="Reiniciar"
+            >
+              <RestartIcon className="w-6 h-6 text-slate-200" />
+            </button>
+        </div>
       )}
       
       {appState === 'MENU' && <StartMenu onStart={handleStart} />}

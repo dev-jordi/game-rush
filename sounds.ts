@@ -3,7 +3,7 @@
 declare var Howl: any;
 declare var Howler: any;
 
-// Using free sound effects from Pixabay for demonstration
+// Using reliable audio sources for background music
 const sounds = {
   move: new Howl({ src: ['https://cdn.pixabay.com/download/audio/2022/03/15/audio_2828a27a82.mp3?filename=swoosh-89547.mp3'], volume: 0.7 }),
   complete: new Howl({ src: ['https://cdn.pixabay.com/download/audio/2022/03/10/audio_c3b0923528.mp3?filename=success-1-6297.mp3'], volume: 0.5 }),
@@ -12,10 +12,15 @@ const sounds = {
   start: new Howl({ src: ['https://cdn.pixabay.com/download/audio/2021/08/04/audio_51a2d1a384.mp3?filename=short-success-sound-glockenspiel-treasure-video-game-1-18534.mp3'] }),
   win: new Howl({ src: ['https://cdn.pixabay.com/download/audio/2022/01/21/audio_141a0247a3.mp3?filename=nice-thought-2-36411.mp3'] }),
   bgm: new Howl({ 
-    src: ['https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=cyberpunk-city-11048.mp3'], 
+    src: ['https://assets.mixkit.co/music/preview/mixkit-deep-urban-623.mp3'], 
     html5: true, 
     loop: true, 
-    volume: 0.3 
+    volume: 0.3,
+    onplayerror: function() {
+      sounds.bgm.once('unlock', function() {
+        sounds.bgm.play();
+      });
+    }
   }),
 };
 
