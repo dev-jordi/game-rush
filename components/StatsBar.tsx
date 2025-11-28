@@ -10,37 +10,43 @@ interface StatsBarProps {
 }
 
 const StatsBar: React.FC<StatsBarProps> = ({ level, xp, xpToNextLevel, energy, maxEnergy }) => {
-    const xpPercentage = (xp / xpToNextLevel) * 100;
-    const energyPercentage = (energy / maxEnergy) * 100;
+    const xpPercentage = Math.min(100, (xp / xpToNextLevel) * 100);
+    const energyPercentage = Math.min(100, (energy / maxEnergy) * 100);
 
     return (
-        <div className="absolute top-16 left-1/2 -translate-x-1/2 w-11/12 max-w-lg z-10">
-            <div className="bg-black/30 backdrop-blur-xl border border-white/10 rounded-3xl p-4 shadow-2xl flex flex-col gap-3">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-lg z-10">
+            <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl p-4 shadow-2xl flex flex-col gap-2 relative">
                 
-                {/* Level Badge */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-indigo-500 to-purple-600 px-4 py-1 rounded-full shadow-lg border border-white/20">
-                    <span className="font-bold text-sm text-white tracking-wider">NÍVEL {level}</span>
+                {/* Level Badge - Agora flutuando um pouco acima da barra no canto */}
+                <div className="absolute -top-4 right-4 bg-gradient-to-r from-indigo-500 to-purple-600 px-3 py-1 rounded-full shadow-lg border border-white/20">
+                    <span className="font-bold text-xs text-white tracking-wider">NÍVEL {level}</span>
                 </div>
 
-                <div className="mt-2 flex flex-col gap-3">
-                    {/* XP Bar */}
-                    <div className="flex items-center gap-3">
-                        <span className="font-bold text-xs text-yellow-400 w-6">XP</span>
-                        <div className="flex-1 bg-black/50 rounded-full h-3 relative overflow-hidden border border-white/5">
+                <div className="flex flex-col gap-3">
+                    {/* Energy Bar (Prioridade Visual) */}
+                    <div className="flex flex-col gap-1">
+                        <div className="flex justify-between items-end px-1">
+                            <span className="font-bold text-xs text-emerald-400">ENERGIA</span>
+                            <span className="text-[10px] text-slate-400">{Math.floor(energy)}/{maxEnergy}</span>
+                        </div>
+                         <div className="w-full bg-black/50 rounded-full h-4 relative overflow-hidden border border-white/5">
                             <div 
-                                className="bg-gradient-to-r from-yellow-500 to-amber-600 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(245,158,11,0.3)]"
-                                style={{ width: `${xpPercentage}%` }}
+                                className={`h-full rounded-full transition-all duration-300 ease-out shadow-[0_0_10px_rgba(16,185,129,0.3)] ${energy < 30 ? 'bg-red-500 animate-pulse' : 'bg-gradient-to-r from-emerald-500 to-teal-500'}`}
+                                style={{ width: `${energyPercentage}%` }}
                             ></div>
                         </div>
                     </div>
 
-                    {/* Energy Bar */}
-                    <div className="flex items-center gap-3">
-                        <span className="font-bold text-xs text-emerald-400 w-6">ENE</span>
-                         <div className="flex-1 bg-black/50 rounded-full h-3 relative overflow-hidden border border-white/5">
+                    {/* XP Bar */}
+                    <div className="flex flex-col gap-1">
+                        <div className="flex justify-between items-end px-1">
+                             <span className="font-bold text-xs text-yellow-400">PROGRESSO</span>
+                             <span className="text-[10px] text-slate-400">{Math.floor(xp)}/{xpToNextLevel} xp</span>
+                        </div>
+                        <div className="w-full bg-black/50 rounded-full h-2 relative overflow-hidden border border-white/5">
                             <div 
-                                className="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(16,185,129,0.3)]"
-                                style={{ width: `${energyPercentage}%` }}
+                                className="bg-gradient-to-r from-yellow-500 to-amber-600 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(245,158,11,0.3)]"
+                                style={{ width: `${xpPercentage}%` }}
                             ></div>
                         </div>
                     </div>

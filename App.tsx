@@ -21,7 +21,8 @@ const INITIAL_STATE = {
   xp: 0,
   energy: 100,
   maxEnergy: 100,
-  characterPosition: { top: '100%', left: '50%' },
+  // Posição inicial ajustada para 80% (perto da barra inferior) em vez de 100% (fora da tela)
+  characterPosition: { top: '80%', left: '50%' },
   gameState: 'IDLE' as GameState,
   currentTaskId: null as number | null,
   volume: 0.5,
@@ -93,7 +94,7 @@ const App: React.FC = () => {
 
     const energyCost = task.energyCost;
     if (energy < energyCost) {
-      // Not enough energy
+      // Not enough energy - Feedback visual could be added here
       return;
     }
     
@@ -101,8 +102,8 @@ const App: React.FC = () => {
     setGameState('MOVING');
     setCharacterPosition(task.position);
 
-    // Simple travel time based on distance, can be improved
-    const travelTime = 1000;
+    // Movimento mais rápido (de 1000ms para 600ms)
+    const travelTime = 600;
 
     setTimeout(() => {
       setGameState('WORKING');
@@ -128,7 +129,7 @@ const App: React.FC = () => {
       soundManager.play('levelUp');
       setLevel(prevLevel => {
         const newLevel = prevLevel + 1;
-        if (newLevel === 5) {
+        if (newLevel === 10) { // Aumentei o nível máximo para dar mais tempo de jogo
           setAppState('WON');
         }
         return newLevel;
@@ -151,6 +152,7 @@ const App: React.FC = () => {
   }, [appState]);
 
   useEffect(() => {
+    // Game Over imediato se a energia acabar
     if (energy <= 0 && appState === 'PLAYING') {
       setAppState('GAME_OVER');
     }
@@ -184,13 +186,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <main className="w-screen h-screen overflow-hidden relative font-sans select-none">
+    <main className="w-screen h-screen overflow-hidden relative font-sans select-none touch-none">
       <VolumeControl onVolumeChange={handleVolumeChange} initialVolume={volume} />
        {appState === 'PLAYING' && (
         <div className="absolute top-4 left-4 z-20 flex gap-3">
             <button 
               onClick={handlePause} 
-              className="p-2 bg-white/10 dark:bg-black/30 border border-white/20 rounded-full shadow-lg backdrop-blur-md hover:scale-110 hover:bg-white/20 transition-all"
+              className="p-3 bg-white/10 dark:bg-black/30 border border-white/20 rounded-full shadow-lg backdrop-blur-md hover:scale-110 hover:bg-white/20 transition-all active:scale-95"
               aria-label="Pausar o jogo"
               title="Pausar (Vencer)"
             >
@@ -198,7 +200,7 @@ const App: React.FC = () => {
             </button>
             <button 
               onClick={handleRestart} 
-              className="p-2 bg-white/10 dark:bg-black/30 border border-white/20 rounded-full shadow-lg backdrop-blur-md hover:scale-110 hover:bg-white/20 transition-all"
+              className="p-3 bg-white/10 dark:bg-black/30 border border-white/20 rounded-full shadow-lg backdrop-blur-md hover:scale-110 hover:bg-white/20 transition-all active:scale-95"
               aria-label="Reiniciar o jogo"
               title="Reiniciar"
             >
@@ -211,15 +213,7 @@ const App: React.FC = () => {
 
       {appState !== 'MENU' && (
         <>
-          <StatsBar 
-            level={level}
-            xp={xp}
-            xpToNextLevel={xpToNextLevel}
-            energy={energy}
-            maxEnergy={maxEnergy}
-          />
-          
-          <div id="game-area" className="w-full h-full">
+          <div id="game-area" className="absolute inset-0 w-full h-full">
             {TASKS.map(task => (
               <TaskObject 
                 key={task.id}
@@ -246,6 +240,14 @@ const App: React.FC = () => {
               />
             ))}
           </div>
+
+          <StatsBar 
+            level={level}
+            xp={xp}
+            xpToNextLevel={xpToNextLevel}
+            energy={energy}
+            maxEnergy={maxEnergy}
+          />
         </>
       )}
       

@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface GameOverMenuProps {
@@ -7,16 +8,24 @@ interface GameOverMenuProps {
 
 const GameOverMenu: React.FC<GameOverMenuProps> = ({ onRestart, level }) => {
   return (
-    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center z-20 p-4">
-      <div className="text-center bg-white/80 dark:bg-gray-800/80 p-8 rounded-2xl shadow-2xl animate-fade-in-up">
-        <h1 className="text-5xl md:text-7xl font-bold text-red-500 mb-4">Fim de Jogo</h1>
-        <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-2">
-          Sua energia acabou! Você alcançou o nível <span className="font-bold text-teal-500">{level}</span>.
+    <div className="absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center z-50 p-6">
+      <div className="text-center bg-gray-900/90 border border-red-500/30 p-8 rounded-2xl shadow-2xl animate-fade-in-up max-w-md w-full">
+        <h1 className="text-5xl md:text-6xl font-bold text-red-500 mb-2">ESGOTADO</h1>
+        <div className="h-1 w-20 bg-red-500 mx-auto mb-6 rounded-full"></div>
+        
+        <p className="text-xl text-slate-200 mb-4">
+          Você chegou ao <span className="font-bold text-teal-400">Nível {level}</span> antes de colapsar.
         </p>
-        <p className="text-md text-slate-500 dark:text-slate-400 mb-8">Lembre-se de fazer pausas para recarregar as energias.</p>
+        
+        <div className="bg-red-500/10 p-4 rounded-lg mb-8 border border-red-500/20">
+          <p className="text-sm md:text-base text-red-200 font-semibold">
+            ⚠ ATENÇÃO: A única maneira de vencer a rotina é sabendo a hora de <span className="underline decoration-2 underline-offset-4">PAUSAR</span>.
+          </p>
+        </div>
+
         <button
           onClick={onRestart}
-          className="px-8 py-3 bg-teal-500 text-white font-bold text-lg rounded-full hover:bg-teal-600 focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-700 transition-transform transform hover:scale-105"
+          className="w-full py-4 bg-gradient-to-r from-teal-600 to-teal-500 text-white font-bold text-lg rounded-xl hover:from-teal-500 hover:to-teal-400 focus:outline-none focus:ring-4 focus:ring-teal-900 transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-teal-500/20"
         >
           Tentar Novamente
         </button>
