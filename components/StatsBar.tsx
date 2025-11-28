@@ -14,10 +14,11 @@ const StatsBar: React.FC<StatsBarProps> = ({ level, xp, xpToNextLevel, energy, m
     const energyPercentage = Math.min(100, (energy / maxEnergy) * 100);
 
     return (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[95%] max-w-lg z-10">
+        // Mudança de bottom-4 para bottom-12/md:bottom-16 para elevar a HUD
+        <div className="absolute bottom-12 md:bottom-16 left-1/2 -translate-x-1/2 w-[95%] max-w-lg z-10">
             <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl p-4 shadow-2xl flex flex-col gap-2 relative">
                 
-                {/* Level Badge - Agora flutuando um pouco acima da barra no canto */}
+                {/* Level Badge */}
                 <div className="absolute -top-4 right-4 bg-gradient-to-r from-indigo-500 to-purple-600 px-3 py-1 rounded-full shadow-lg border border-white/20">
                     <span className="font-bold text-xs text-white tracking-wider">NÍVEL {level}</span>
                 </div>

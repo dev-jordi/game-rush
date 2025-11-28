@@ -21,8 +21,8 @@ const INITIAL_STATE = {
   xp: 0,
   energy: 100,
   maxEnergy: 100,
-  // Posição inicial ajustada para 80% (perto da barra inferior) em vez de 100% (fora da tela)
-  characterPosition: { top: '80%', left: '50%' },
+  // Subindo o personagem para 70% para ficar acima da HUD elevada
+  characterPosition: { top: '70%', left: '50%' },
   gameState: 'IDLE' as GameState,
   currentTaskId: null as number | null,
   volume: 0.5,
@@ -63,6 +63,11 @@ const App: React.FC = () => {
 
   const xpToNextLevel = getXpToNextLevel(level);
 
+  // Calcula o multiplicador de custo de energia baseado no nível
+  const getEnergyCostMultiplier = (currentLevel: number) => {
+    return 1 + (currentLevel - 1) * 0.10; // Aumenta 10% o custo por nível
+  };
+
   useEffect(() => {
     soundManager.setVolume(volume);
   }, []);
@@ -92,9 +97,13 @@ const App: React.FC = () => {
   const handleTaskClick = useCallback((task: Task) => {
     if (gameState !== 'IDLE' || appState !== 'PLAYING') return;
 
-    const energyCost = task.energyCost;
-    if (energy < energyCost) {
-      // Not enough energy - Feedback visual could be added here
+    // Calcula o custo real baseado no nível
+    const costMultiplier = getEnergyCostMultiplier(level);
+    const actualEnergyCost = Math.ceil(task.energyCost * costMultiplier);
+
+    if (energy < actualEnergyCost) {
+      // Feedback visual se não tiver energia
+      soundManager.play('gameOver'); // Som de erro sutil ou feedback
       return;
     }
     
@@ -102,14 +111,13 @@ const App: React.FC = () => {
     setGameState('MOVING');
     setCharacterPosition(task.position);
 
-    // Movimento mais rápido (de 1000ms para 600ms)
     const travelTime = 600;
 
     setTimeout(() => {
       setGameState('WORKING');
       setCurrentTaskId(task.id);
       
-      const newEnergy = Math.min(maxEnergy, Math.max(0, energy - energyCost));
+      const newEnergy = Math.max(0, energy - actualEnergyCost);
       setEnergy(newEnergy);
 
       setTimeout(() => {
@@ -120,7 +128,7 @@ const App: React.FC = () => {
         addExplosion(task.position);
       }, task.duration);
     }, travelTime);
-  }, [gameState, appState, energy, maxEnergy, addExplosion]);
+  }, [gameState, appState, energy, level, addExplosion]); // Add level dependency
 
   // Level up check
   useEffect(() => {
@@ -129,20 +137,20 @@ const App: React.FC = () => {
       soundManager.play('levelUp');
       setLevel(prevLevel => {
         const newLevel = prevLevel + 1;
-        if (newLevel === 10) { // Aumentei o nível máximo para dar mais tempo de jogo
+        if (newLevel === 15) { // Aumentei um pouco o cap
           setAppState('WON');
         }
         return newLevel;
       });
       setXp(prevXp => prevXp - xpToNextLevel);
-      const newMaxEnergy = Math.floor(maxEnergy * 1.1);
+      const newMaxEnergy = Math.floor(maxEnergy * 1.1); // Max Energy sobe 10%
       setMaxEnergy(newMaxEnergy);
       setEnergy(newMaxEnergy); // Full heal on level up
       addExplosion({ top: '50%', left: '50%' });
     }
   }, [xp, xpToNextLevel, addExplosion, appState, maxEnergy]);
 
-  // Game over and win check
+  // Game over and win sounds
   useEffect(() => {
     if (appState === 'GAME_OVER') {
       soundManager.play('gameOver');
@@ -151,12 +159,26 @@ const App: React.FC = () => {
     }
   }, [appState]);
 
+  // Lógica de Game Over: Energia Zero ou Insuficiente para qualquer tarefa (Soft Lock)
   useEffect(() => {
-    // Game Over imediato se a energia acabar
-    if (energy <= 0 && appState === 'PLAYING') {
-      setAppState('GAME_OVER');
+    if (appState !== 'PLAYING') return;
+
+    if (energy <= 0) {
+        setAppState('GAME_OVER');
+        return;
     }
-  }, [energy, appState]);
+
+    // Verifica se o jogador está "preso" (tem energia, mas não o suficiente para a tarefa mais barata)
+    if (gameState === 'IDLE') {
+        const costMultiplier = getEnergyCostMultiplier(level);
+        const cheapestTaskCost = Math.min(...TASKS.map(t => Math.ceil(t.energyCost * costMultiplier)));
+        
+        if (energy < cheapestTaskCost) {
+            setAppState('GAME_OVER');
+        }
+    }
+
+  }, [energy, appState, level, gameState]);
   
   const handleStart = () => {
     soundManager.play('start');
@@ -177,13 +199,15 @@ const App: React.FC = () => {
   };
 
   const handlePause = () => {
-    // Ao pausar, o jogador vence o jogo (a verdadeira vitória é parar)
     setAppState('WON');
   };
 
   const handleResume = () => {
     setAppState('PLAYING');
   };
+
+  // Helper para renderizar tasks com o custo atualizado visualmente (opcional, mas bom para UX)
+  const currentCostMultiplier = getEnergyCostMultiplier(level);
 
   return (
     <main className="w-screen h-screen overflow-hidden relative font-sans select-none touch-none">
@@ -214,15 +238,18 @@ const App: React.FC = () => {
       {appState !== 'MENU' && (
         <>
           <div id="game-area" className="absolute inset-0 w-full h-full">
-            {TASKS.map(task => (
-              <TaskObject 
-                key={task.id}
-                task={task}
-                onClick={handleTaskClick}
-                isWorking={currentTaskId === task.id}
-                isDisabled={gameState !== 'IDLE' || energy < task.energyCost}
-              />
-            ))}
+            {TASKS.map(task => {
+              const actualCost = Math.ceil(task.energyCost * currentCostMultiplier);
+              return (
+                <TaskObject 
+                    key={task.id}
+                    task={task}
+                    onClick={handleTaskClick}
+                    isWorking={currentTaskId === task.id}
+                    isDisabled={gameState !== 'IDLE' || energy < actualCost}
+                />
+              );
+            })}
 
             <Character 
               position={characterPosition}
